@@ -1,4 +1,24 @@
-.navbar {
-    font-family: Georgia, "Times New Roman";
-    data-bs-theme: dark;
+/* Header */
+
+.navbar .navbar-nav .nav-link {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
 }
+
+.top-menu li a::after {
+    content: '';
+    display: block;
+    width: 100%;
+    background-color: #111;
+    height: 1px;
+    transition: all .3s;
+    transform: scale(0);
+}
+
+.top-menu li a:hover::after {
+    transform: scale(1);
+}
+
+/* Header */

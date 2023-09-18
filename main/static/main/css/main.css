@@ -21,14 +21,66 @@
 }
 /* Header */
 
-.carousel-item {
-    margin-top: 520px;
+/* Carousel */
+.my-carousel {
+    margin-bottom: 50px;
 }
 
+.my-carousel .carousel-item {
+    max-height: 500px;
+}
+
+.my-carousel .carousel-item img {
+    object-fit: cover;
+}
+/* Carousel */
+
 /* Cards benefits */
+.row {
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .card .card-body p {
-    margin-top: 220px;
+    display: block;
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
     align-items: center;
     justify-content: center;
 }
 /* Cards benefits */
+
+/* Banner about */
+.text-bg-white {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.text-bg-white > img {
+    max-width: 100%;
+    height: 350px;
+    opacity: 0.4;
+}
+
+.text-bg-white .card-img-overlay img {
+    display: block;
+    max-weight: 50%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.text-bg-white .card-title {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #6F8BF3;
+}
+
+.text-bg-white .card-text {
+    font-family: inherit;
+    font-weight: 300;
+    font-size: 20px;
+    column-count: 2;
+}

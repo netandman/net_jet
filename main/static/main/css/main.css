@@ -1,5 +1,4 @@
 /* Header */
-
 .navbar .navbar-nav .nav-link {
     font-family: "Courier New", Courier, sans-serif;
     font-size: 20px;
@@ -20,5 +19,16 @@
 .top-menu li a:hover::after {
     transform: scale(1);
 }
-
 /* Header */
+
+.carousel-item {
+    margin-top: 520px;
+}
+
+/* Cards benefits */
+.card .card-body p {
+    margin-top: 220px;
+    align-items: center;
+    justify-content: center;
+}
+/* Cards benefits */

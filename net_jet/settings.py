@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'fontawesomefree',
     'net_jet',
     'net_jet.main',
+    'net_jet.articles',
 ]
 
 MIDDLEWARE = [

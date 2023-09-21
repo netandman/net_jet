@@ -25508,7 +25508,7 @@ newspaper:
   label: Newspaper
   search:
     terms:
-      - article
+      - articles
       - editorial
       - headline
       - journal

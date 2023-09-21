@@ -23,4 +23,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('net_jet.main.urls')),
+    path('articles/', include('net_jet.articles.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

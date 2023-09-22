@@ -19,6 +19,11 @@
 .top-menu li a:hover::after {
     transform: scale(1);
 }
+
+.navbar img {
+    width: 200px;
+    height: 100px;
+}
 /* Header */
 
 /* Carousel */
@@ -27,7 +32,7 @@
 }
 
 .my-carousel .carousel-item {
-    max-height: 500px;
+    height: 750px;
 }
 
 .my-carousel .carousel-item img {
@@ -84,4 +89,35 @@
     font-weight: 300;
     font-size: 20px;
     column-count: 2;
+}
+/* Banner about */
+
+/* Footer */
+.footer img {
+    display: block;
+    weight: 200px;
+    height: 100px;
+}
+
+.footer a {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #696969;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.footer a::after {
+    content: '';
+    display: block;
+    width: 100%;
+    background-color: #111;
+    height: 1px;
+    transition: all .3s;
+    transform: scale(0);
+}
+
+.footer a:hover::after {
+    transform: scale(1);
 }

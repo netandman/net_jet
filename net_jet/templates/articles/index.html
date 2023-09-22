@@ -18,7 +18,7 @@
     <img src="{{ article.images.url }}" class="card-img-top" alt="...">
     <div class="card-body">
       <h5 class="card-title">{{ article.name }}</h5>
-      <p class="card-text">{{ article.body|slice:":200" }}</p>
+      <p class="card-text text-truncate">{{ article.body|slice:":200" }}</p>
       <a href="{{ article.id }}" class="btn btn-primary">Подробнее</a>
     </div>
   </div>

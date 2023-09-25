@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from net_jet.articles.models import Article
 
 # Create your views here.
 

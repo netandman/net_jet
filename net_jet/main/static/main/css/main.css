@@ -6,7 +6,7 @@
     text-transform: uppercase;
 }
 
-.top-menu li a::after {
+.add_menu a::after {
     content: '';
     display: block;
     width: 100%;
@@ -16,7 +16,7 @@
     transform: scale(0);
 }
 
-.top-menu li a:hover::after {
+.add_menu a:hover::after {
     transform: scale(1);
 }
 

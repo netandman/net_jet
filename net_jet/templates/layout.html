@@ -22,13 +22,17 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav top-menu">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Инструменты</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Инструменты</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Сервис провайдеры</a></li>
+                                <li><a class="dropdown-item" href="#">Проверка доступности</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item add_menu">
                             <a class="nav-link" href="{% url 'articles_index' %}">Статьи</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item add_menu">
                             <a class="nav-link" href="#">Контакты</a>
                         </li>
                     </ul>
@@ -61,7 +65,7 @@
                     </div>
 
                     <div class="col-md-3 col-6">
-                        <a href="#">Контакты</a>
+                        <a href="#">Контакты</a href="#">
                     </div>
                 </div>
             </div>

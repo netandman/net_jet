@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'net_jet',
     'net_jet.main',
     'net_jet.articles',
+    'net_jet.tools',
 ]
 
 MIDDLEWARE = [

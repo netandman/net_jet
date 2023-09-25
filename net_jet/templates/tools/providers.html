@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Сервис провайдеры{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'tools/css/providers.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="head_providers">
+  <h2>Выберите региональную лабораторию</h2>
+</div>
+
+<select class="form-select" aria-label="Default select example">
+  <option selected>Open this select menu</option>
+  <option value="1">One</option>
+  <option value="2">Two</option>
+  <option value="3">Three</option>
+</select>
+{% endblock %}

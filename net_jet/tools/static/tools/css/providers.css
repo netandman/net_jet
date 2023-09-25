@@ -1,0 +1,12 @@
+.head_providers h2 {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-top: 150px;
+    text-indent: 1%;
+}
+
+.form-select {
+    margin-bottom: 50px;
+}

@@ -4,4 +4,8 @@ from django.shortcuts import render
 
 
 def index(request):
-    return render(request, 'main/index.html')
+    return render(request, 'tools/index.html')
+
+
+def providers(request):
+    return render(request, 'tools/providers.html')

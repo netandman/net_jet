@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="ru" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
+    {% block css %}{% endblock %}
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg fixed-top bg-body-tertiary shadow-sm p-3 mb-5 rounded">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'main_index' %}"><img class="nj-logo" src="{% static 'main/img/NetJet_logo.png' %}" alt="Logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav top-menu">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Инструменты</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'articles_index' %}">Статьи</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Контакты</a>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#"><i class="fa-regular fa-user"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% block content %}
+    {% endblock %}
+    <footer>
+        <section class="footer shadow-sm">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-6">
+                        <img class="nj-logo" src="{% static 'main/img/NetJet_logo.png' %}" alt="Logo">
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <a href="#">О проекте</a>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <a href="#">Карта сайта</a>
+                    </div>
+
+                    <div class="col-md-3 col-6">
+                        <a href="#">Контакты</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </footer>
+    <script src="{% static 'main/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

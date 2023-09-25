@@ -1,0 +1,23 @@
+/* Articles body */
+.row .card {
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.row .card img {
+    margin-left: auto;
+    margin-right: auto;
+    width: 285px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.row .card {
+    font-family: 'Roboto', sans-serif;
+}
+
+.row .card .card-title {
+    font-weight: bold;
+}
+/* Articles body */

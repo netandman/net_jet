@@ -8,11 +8,16 @@
 <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
-<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'article/css/article_show.css' %}">
 {% endblock %}
 
 {% block content %}
-  <h1>{{ article.name }}</h1>
-  <img src="{{ article.images.url }}">
-  <div>{{ article.body }}</div>
+  <div class="article_detail">
+    <img src="{{ article.images.url }}">
+    <h1>{{ article.name }}</h1>
+    <p>{{ article.body }}</p>
+  </div>
 {% endblock %}

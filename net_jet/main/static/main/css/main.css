@@ -78,7 +78,7 @@
 
 .text-bg-white .card-title {
     font-family: "Courier New", Courier, sans-serif;
-    font-size: 26px;
+    font-size: 20px;
     font-weight: bold;
     line-height: 1.5;
     color: #6F8BF3;
@@ -121,3 +121,4 @@
 .footer a:hover::after {
     transform: scale(1);
 }
+/* Footer */

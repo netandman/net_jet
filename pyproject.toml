@@ -6,7 +6,7 @@ authors = ["netandman <mihacka@ya.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 django = "^4.2.4"
 fontawesomefree = "6.4.2"
 pillow = "^10.0.1"

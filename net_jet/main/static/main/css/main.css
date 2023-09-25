@@ -1,0 +1,123 @@
+/* Header */
+.navbar .navbar-nav .nav-link {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+.top-menu li a::after {
+    content: '';
+    display: block;
+    width: 100%;
+    background-color: #111;
+    height: 1px;
+    transition: all .3s;
+    transform: scale(0);
+}
+
+.top-menu li a:hover::after {
+    transform: scale(1);
+}
+
+.navbar img {
+    width: 200px;
+    height: 100px;
+}
+/* Header */
+
+/* Carousel */
+.my-carousel {
+    margin-bottom: 50px;
+}
+
+.my-carousel .carousel-item {
+    height: 750px;
+}
+
+.my-carousel .carousel-item img {
+    object-fit: cover;
+}
+/* Carousel */
+
+/* Cards benefits */
+.row {
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card .card-body p {
+    display: block;
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    align-items: center;
+    justify-content: center;
+}
+/* Cards benefits */
+
+/* Banner about */
+.text-bg-white {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 50px;
+}
+
+.text-bg-white > img {
+    max-width: 100%;
+    height: 350px;
+    opacity: 0.4;
+}
+
+.text-bg-white .card-img-overlay img {
+    display: block;
+    max-weight: 50%;
+    height: 250px;
+    object-fit: cover;
+}
+
+.text-bg-white .card-title {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 26px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #6F8BF3;
+}
+
+.text-bg-white .card-text {
+    font-family: inherit;
+    font-weight: 300;
+    font-size: 20px;
+    column-count: 2;
+}
+/* Banner about */
+
+/* Footer */
+.footer img {
+    display: block;
+    weight: 200px;
+    height: 100px;
+}
+
+.footer a {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #696969;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.footer a::after {
+    content: '';
+    display: block;
+    width: 100%;
+    background-color: #111;
+    height: 1px;
+    transition: all .3s;
+    transform: scale(0);
+}
+
+.footer a:hover::after {
+    transform: scale(1);
+}

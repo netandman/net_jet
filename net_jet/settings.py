@@ -37,8 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'fontawesomefree',
     'net_jet',
-    'main',
+    'net_jet.main',
+    'net_jet.articles',
 ]
 
 MIDDLEWARE = [

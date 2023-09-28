@@ -1,7 +1,7 @@
 from django.urls import path
-from . import views
+from net_jet.tools import views
 
 urlpatterns = [
-    path('', views.index, name='tools_index'),
-    path('providers/', views.providers, name='providers'),
+    path('', views.IndexView.as_view(), name='tools_index'),
+    path('providers/', views.ProvidersView.as_view(), name='providers'),
 ]

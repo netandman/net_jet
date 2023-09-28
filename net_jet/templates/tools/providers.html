@@ -15,10 +15,24 @@
 {% endblock %}
 
 {% block content %}
-<select class="form-select" aria-label="Default select example">
-  <option selected>Выберите региональную лабораторию</option>
-    {% for lab in labs %}
-      <option value="{{ lab.id }}">{{ lab.name }}</option>
-    {% endfor %}
-</select>
+<h4>Выберите региональную лабораторию</h4>
+<form method="post">
+  {% csrf_token %}
+  <select class="form-select" aria-label="Default select example" >
+      {% for lab in labs %}
+        <option value="{{ lab.id }}">{{ lab.name }}</option>
+      {% endfor %}
+  </select>
+  <input type="submit" value="Send" />
+</form>
+<p aria-hidden="true">
+  <span class="placeholder col-6"></span>
+  Your chose is {{ lab_id }}
+</p>
+<a class="btn btn-primary disabled placeholder col-4" aria-disabled="true"></a>
+<div class="lab_id">
+  {% if lab_id %}
+    <p>Your chose is {{ lab_id }}</p>
+  {% endif %}
+</div>
 {% endblock %}

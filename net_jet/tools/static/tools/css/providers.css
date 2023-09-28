@@ -1,3 +1,4 @@
+/* Select area */
 .head_providers h2 {
     font-family: "Courier New", Courier, sans-serif;
     font-size: 20px;
@@ -8,5 +9,10 @@
 }
 
 .form-select {
+    font-family: "Courier New", Courier, sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 150px;
     margin-bottom: 50px;
 }
+/* Select area */

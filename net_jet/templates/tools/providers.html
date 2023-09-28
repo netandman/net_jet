@@ -15,14 +15,10 @@
 {% endblock %}
 
 {% block content %}
-<div class="head_providers">
-  <h2>Выберите региональную лабораторию</h2>
-</div>
-
 <select class="form-select" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  <option value="1">One</option>
-  <option value="2">Two</option>
-  <option value="3">Three</option>
+  <option selected>Выберите региональную лабораторию</option>
+    {% for lab in labs %}
+      <option value="{{ lab.id }}">{{ lab.name }}</option>
+    {% endfor %}
 </select>
 {% endblock %}

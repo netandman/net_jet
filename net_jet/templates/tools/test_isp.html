@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Проверка доступности{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'tools/css/test_isp.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="test-lab">
+  <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
+      background-size: cover;
+      max-weight: 25%;
+      max-height: 25%">
+  <div class="test-lab-choice">
+    <h4>Выберите лабораторию для проверки сети</h4>
+      <form action="{% url 'test_isp' %}" method="post">
+        {% csrf_token %}
+        <select class="form-select w-50" aria-label="Default select example" name="labs">
+          {% for lab in labs %}
+            <option value="{{ lab.name }}">{{ lab.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" class="btn btn-secondary" value="Выбрать" />
+      </form>
+  </div>
+  <div class="test-isp">
+    <h4>Выберите интернет провайдера</h4>
+    <form action="{% url 'test_isp' %}" method="post">
+      {% csrf_token %}
+      <select class="form-select w-50" aria-label="Default select example" name="isp">
+        {% for key, val in isp_dict.items %}
+          <option value="{{ val.tags.slug }}">{{ key }}</option>
+        {% endfor %}
+      </select>
+      {% if not isp_dict%}
+      <input type="button" class="btn btn-secondary" disabled value="Выбрать">
+      {% endif %}
+      {% if isp_dict %}
+      <input type="submit" class="btn btn-secondary" value="Выбрать" />
+      {% endif %}
+    </form>
+  </div>
+  <div class="test-result">
+    <div class="card">
+      <div class="card-header">
+        Результаты тестирования
+      </div>
+      <div class="card-body">
+        {% if isp_dict %}
+          {% for key, val in isp_dict.items %}
+            <h5 class="card-title">{{ key }}</h5>
+            <p class="card-text">{{ val.account }}</p>
+            <p class="card-text">{{ val.portal_url }}</p>
+            <p class="card-text">{{ val.noc_contact }}</p>
+            <p class="card-text">{{ val.admin_contact }}</p>
+            <p class="card-text">{{ val.comments }}</p>
+          {% endfor %}
+        {% endif %}
+        {% if isp_choice %}
+          <p class="card-text">{{ isp_choice }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+{% endblock %}

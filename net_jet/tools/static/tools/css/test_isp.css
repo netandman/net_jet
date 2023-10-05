@@ -1,6 +1,12 @@
-{% load static %}
-/* Select area */
-h4 {
+/* Main block */
+.test-lab {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* Main block */
+/* Lab choice */
+.test-lab-choice h4 {
     font-family: "Courier New", Courier, sans-serif;
     font-weight: bold;
     text-transform: uppercase;
@@ -16,16 +22,13 @@ h4 {
     margin-top: 10px;
     margin-bottom: 10px;
 }
-/* Select area */
-/* Info area */
-.isp .card-header {
+/* Lab choice */
+/* ISP choice */
+.test-isp h4 {
     font-family: "Courier New", Courier, sans-serif;
-    font-size: 20px;
-    font-weight: 400;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-indent: 1%;
 }
-
-.isp {
-    margin-top: 150px;
-    margin-bottom: 50px;
-}
-/* Info area */
+/* ISP choice */

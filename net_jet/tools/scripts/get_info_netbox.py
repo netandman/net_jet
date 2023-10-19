@@ -1,7 +1,7 @@
 import pynetbox
-from pprint import pprint
 import ipaddress
 import yaml
+from pprint import pprint
 
 
 class GetNetbox:
@@ -20,33 +20,44 @@ class GetNetbox:
         self.lab_slug = tenant_get.slug
 
     def isp_lab(self):
-        circuits = self.nb.circuits.circuits.filter(tenant_id=self.lab_id)
+        circuits = self.nb.circuits.circuits.filter(tenant_id=self.lab_id, status='active')
         crts_dict = {}
         isp_dict = {}
         for circuit in circuits:
             isp_get = self.nb.circuits.circuits.get(cid=circuit)
-            crts_dict[isp_get] = {"crts_name": isp_get.display, "provider_id": isp_get.provider.id}
+            #crts_dict[isp_get] = {"crts_name": isp_get.display, "provider_id": isp_get.provider.id}
             isp_dict[isp_get.cid] = dict(self.nb.circuits.providers.get(id=isp_get.provider.id))
         self.isp_dict = isp_dict
 
-    def core_lab(self):
+    def core_ip(self):
         core = self.nb.dcim.devices.filter(tenant_id=self.lab_id, tag="core")
         core_get = self.nb.dcim.devices.get(name=core)
-        core_intf_filter = self.nb.dcim.interfaces.filter(device_id=core_get.id, description="mgmt")
-        mgmt_vlan_intf = ((list(core_intf_filter))[0])
-        core_mgmt_intf = self.nb.dcim.interfaces.get(name=mgmt_vlan_intf, device_id=core_get.id)
-        self.core_intf = core_mgmt_intf
-        """
-        {'id': 1776, 'url': 'http://172.17.8.130:8085/api/dcim/interfaces/1776/', 'display': 'Vlan10', 'device': {'id': 1731, 'url': 'http://172.17.8.130:8085/api/dcim/devices/1731/', 'display': 'C9300_AlmatyLab_Core', 'name': 'C9300_AlmatyLab_Core', 'display_name': 'C9300_AlmatyLab_Core'}, 'name': 'Vlan10', 'label': '', 'type': {'value': 'virtual', 'label': 'Virtual'}, 'enabled': True, 'parent': None, 'lag': None, 'mtu': None, 'mac_address': None, 'mgmt_only': False, 'description': 'mgmt', 'mode': {'value': 'tagged', 'label': 'Tagged'}, 'untagged_vlan': None, 'tagged_vlans': [{'id': 13, 'url': 'http://172.17.8.130:8085/api/ipam/vlans/13/', 'display': 'MGMT (10)', 'vid': 10, 'name': 'MGMT', 'display_name': 'MGMT (10)'}], 'mark_connected': False, 'cable': None, 'cable_peer': None, 'cable_peer_type': None, 'connected_endpoint': None, 'connected_endpoint_type': None, 'connected_endpoint_reachable': None, 'tags': [], 'custom_fields': {}, 'created': '2021-09-05', 'last_updated': '2023-10-02T14:53:26.989533+03:00', 'count_ipaddresses': 1, '_occupied': False}
-        """
+        mgmt_intf = ipaddress.ip_interface(core_get.primary_ip4)
+        core_mgmt_ip = mgmt_intf.ip
+        #core_intf_filter = self.nb.dcim.interfaces.filter(device_id=core_get.id, description="mgmt")
+        #mgmt_vlan_intf = ((list(core_intf_filter))[0])
+        #core_mgmt_intf = self.nb.dcim.interfaces.get(name=mgmt_vlan_intf, device_id=core_get.id)
+        #self.core_intf = core_mgmt_intf
+        self.core_mgmt_ip = core_mgmt_ip
 
-    def core_ip(self):
-        core_ipaddr_filter = self.nb.ipam.ip_addresses.filter(tenant_id=self.lab_id, description="mgmt")
-        mgmt_int = ipaddress.ip_interface((list(core_ipaddr_filter))[0])
-        mgmt_subnet = mgmt_int.network
-        core_ipaddr_get = self.nb.ipam.ip_addresses.get(address=mgmt_int.ip, mask_length=mgmt_subnet.prefixlen)
-        self.core_intf = mgmt_int
-        self.core_ip_dict = core_ipaddr_get
+    def router_ip(self):
+        router = self.nb.dcim.devices.filter(tenant_id=self.lab_id, tag="router")
+        router_get = self.nb.dcim.devices.get(name=router)
+        mgmt_intf = ipaddress.ip_interface(router_get.primary_ip4)
+        router_mgmt_ip = mgmt_intf.ip
+        self.router_mgmt_ip = router_mgmt_ip
+
+    #def core_ip(self):
+    #    """
+    #    Filtering ip address by id of tenant and tag with mgmt value
+    #    """
+    #    core_ipaddr_filter = self.nb.ipam.ip_addresses.filter(tenant_id=self.lab_id,
+    #                                                          tag="mgmt")
+    #    mgmt_int = ipaddress.ip_interface((list(core_ipaddr_filter))[0])
+    #    mgmt_subnet = mgmt_int.network
+    #    core_ipaddr_get = self.nb.ipam.ip_addresses.get(address=mgmt_int.ip, mask_length=mgmt_subnet.prefixlen)
+    #    self.core_intf = mgmt_int
+    #    self.core_ip_dict = core_ipaddr_get
 
     def core_isp_intf(self):
         core = self.nb.dcim.devices.filter(tenant_id=self.lab_id, tag="core")
@@ -56,6 +67,21 @@ class GetNetbox:
         self.main_isp_intf = main_isp_intf
         self.backup_isp_intf = backup_isp_inf
 
+    def router_isp_intf(self):
+        router = self.nb.dcim.devices.filter(tenant_id=self.lab_id, tag="router")
+        router_get = self.nb.dcim.devices.get(name=router)
+        main_isp_intf = self.nb.dcim.interfaces.get(tag="isp_main", device_id=router_get.id)
+        backup_isp_intf = self.nb.dcim.interfaces.get(tag="isp_backup", device_id=router_get.id)
+        main_isp_ip_filter = self.nb.ipam.ip_addresses.filter(tenant_id=self.lab_id,
+                                                              device_id=router_get.id,
+                                                              interface=main_isp_intf.display)
+        back_isp_ip_filter = self.nb.ipam.ip_addresses.filter(tenant_id=self.lab_id,
+                                                              device_id=router_get.id,
+                                                              interface=backup_isp_intf.display)
+        main_isp_ip = ipaddress.ip_interface((list(main_isp_ip_filter))[0])
+        back_isp_ip = ipaddress.ip_interface((list(back_isp_ip_filter))[0])
+        self.rtr_main_isp_ip = main_isp_ip
+        self.rtr_backup_isp_ip = back_isp_ip
 
 if __name__ == "__main__":
     with open("C:/Python/myprojects/net_jet/net_jet/tools/scripts/private.yml") as src:
@@ -63,12 +89,15 @@ if __name__ == "__main__":
     labs = GetNetbox(**credentials['netbox'])
     #labs.get_tenants("lab")
     #labs_dict = {lab: {"name": lab, "id": labs.all_tenants.index(lab)} for lab in labs.all_tenants}
-    labs.lab_info("Лаборатория Казахстан")
-    labs.isp_lab()
-    #labs.core_lab()
-    labs.core_ip()
-    labs.core_isp_intf()
-    print(labs.isp_dict)
+    labs.lab_info("Лаборатория Новосибирск")
+    labs.router_isp_intf()
+    print(labs.rtr_main_isp_ip)
+    print(labs.rtr_backup_isp_ip)
+    #labs.isp_lab()
+    #print(labs.isp_dict)
+    #labs.core_ip()
+    #labs.core_isp_intf()
+    #print(labs.core_ip_dict)
     #labs_cits_dict = {}
     #for lab in labs_dict:
     #    labs.lab_info(lab["name"])

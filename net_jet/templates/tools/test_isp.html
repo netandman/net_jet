@@ -38,35 +38,47 @@
       {% csrf_token %}
       <select class="form-select w-50" aria-label="Default select example" name="isp">
         {% for key, val in isp_dict.items %}
-          <option value="{{ val.tags.slug }}">{{ key }}</option>
+          {% for tag in val.tags %}
+          <option value="{{ tag.slug }}">{{ key }}</option>
+          {% endfor %}
         {% endfor %}
       </select>
       {% if not isp_dict%}
       <input type="button" class="btn btn-secondary" disabled value="Выбрать">
+      <p>Данные загружаются, пожалуйста ожидайте</p>
       {% endif %}
       {% if isp_dict %}
       <input type="submit" class="btn btn-secondary" value="Выбрать" />
       {% endif %}
     </form>
   </div>
+  {% if user_message %}
+    <h1>{{user_message}}</h1>
+  {% endif %}
   <div class="test-result">
     <div class="card">
       <div class="card-header">
         Результаты тестирования
       </div>
       <div class="card-body">
-        {% if isp_dict %}
-          {% for key, val in isp_dict.items %}
-            <h5 class="card-title">{{ key }}</h5>
-            <p class="card-text">{{ val.account }}</p>
-            <p class="card-text">{{ val.portal_url }}</p>
-            <p class="card-text">{{ val.noc_contact }}</p>
-            <p class="card-text">{{ val.admin_contact }}</p>
-            <p class="card-text">{{ val.comments }}</p>
-          {% endfor %}
-        {% endif %}
         {% if isp_choice %}
-          <p class="card-text">{{ isp_choice }}</p>
+          <p class="card-text">ТЕСТ 1. Анализ состояния интерфейса на ядре сети, {{ lab_choice }}</p>
+        {% endif %}
+        {% if core_isp_main %}
+          <p class="card-text">Проверка {{ core_isp_main.interface }}, описание {{ core_isp_main.description }}</p>
+          <p class="card-text">Согласованная скорость {{ core_isp_main.speed }}</p>
+          <p class="card-text">Состояние интерфейса {{ core_isp_main.intf_status }}</p>
+          <p class="card-text">Состояние протокола {{ core_isp_main.prot_status }}</p>
+          <p class="card-text">Количество входящих ошибок {{ core_isp_main.input_errors }}</p>
+          <p class="card-text">Количество исходящих ошибок {{ core_isp_main.output_errors }}</p>
+        {% endif %}
+        {% if core_isp_backup %}
+          <p class="card-text">Проверка {{ core_isp_backup.interface }}, описание {{ core_isp_backup.description }}</p>
+          <p class="card-text">Согласованная скорость {{ core_isp_backup.speed }}</p>
+          <p class="card-text">Состояние интерфейса {{ core_isp_backup.intf_status }}</p>
+          <p class="card-text">Состояние протокола {{ core_isp_backup.prot_status }}</p>
+          <p class="card-text">Количество входящих ошибок {{ core_isp_backup.input_errors }}</p>
+          <p class="card-text">Количество исходящих ошибок {{ core_isp_backup.output_errors }}</p>
         {% endif %}
       </div>
     </div>

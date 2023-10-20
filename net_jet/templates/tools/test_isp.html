@@ -80,6 +80,44 @@
           <p class="card-text">Количество входящих ошибок {{ core_isp_backup.input_errors }}</p>
           <p class="card-text">Количество исходящих ошибок {{ core_isp_backup.output_errors }}</p>
         {% endif %}
+        {% if router_main_gw %}
+          <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
+          <p class="card-text">Проверка {{ router_main_gw.ip_addr }}, шлюз основного провайдера</p>
+          {% if router_main_gw.icmp_percent %}
+          <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_percent }}</p>
+          {% endif %}
+          {% if router_main_gw.icmp_pcent %}
+          <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_pcent }}</p>
+          {% endif %}
+          {% if router_main_gw.icmp_packets %}
+          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_packets }}</p>
+          {% endif %}
+          {% if router_main_gw.icmp_pkts %}
+          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_pkts }}</p>
+          {% endif %}
+          {% if router_main_gw.delay %}
+          <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_main_gw.delay }}</p>
+          {% endif %}
+        {% endif %}
+        {% if router_backup_gw %}
+          <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
+          <p class="card-text">Проверка {{ router_backup_gw.ip_addr }}, шлюз резервного провайдера</p>
+          {% if router_backup_gw.icmp_percent %}
+          <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_percent }}</p>
+          {% endif %}
+          {% if router_backup_gw.icmp_pcent %}
+          <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_pcent }}</p>
+          {% endif %}
+          {% if router_backup_gw.icmp_packets %}
+          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_packets }}</p>
+          {% endif %}
+          {% if router_backup_gw.icmp_pkts %}
+          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_pkts }}</p>
+          {% endif %}
+          {% if router_backup_gw.delay %}
+          <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_backup_gw.delay }}</p>
+          {% endif %}
+        {% endif %}
       </div>
     </div>
   </div>

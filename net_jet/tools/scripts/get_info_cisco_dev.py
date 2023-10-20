@@ -48,7 +48,6 @@ def check_core_intf_isp(ipaddr, intf, uname, passw):
 
 def check_router_gw(ipaddr, isp_gw, uname, passw):
     gw_list = []
-    ping_result = ""
     ping_dict = {}
     '''
     далее методами ipaddress сравнить в какой диапазон входит какой адрес шлюза и исходя из этого 
@@ -60,8 +59,8 @@ def check_router_gw(ipaddr, isp_gw, uname, passw):
     split_show = output.split('\n')
     regex = (r'ip route 0.0.0.0 0.0.0.0 (?P<gateway>\S+) \d+ name .*')
     regex_ping = (r'Success rate is (?P<icmp_percent>\d+)\s+\S+\s+[(]+(?P<icmp_packets>\S+)[)]+'
-                  r'.*round-trip min/avg/max = (?P<delay>\S+)\s+\S+'
-                  r'|Success rate is (?P<icmp_pcent>\d+)\s+\S+\s+[(]+(?P<icmp_pkts>\S+)[)]+')
+                      r'.*round-trip min/avg/max = (?P<delay>\S+)\s+\S+'
+                      r'|Success rate is (?P<icmp_pcent>\d+)\s+\S+\s+[(]+(?P<icmp_pkts>\S+)[)]+')
     for line in split_show:
         match = re.search(regex, line)
         if match:
@@ -77,6 +76,7 @@ def check_router_gw(ipaddr, isp_gw, uname, passw):
                 if match_ping:
                     ping_dict = match_ping.groupdict()
             ping_dict["ping_result"] = ping_result
+            ping_dict["ip_addr"] = str(ip_addr)
     return ping_dict
 
 

@@ -78,7 +78,7 @@ COD_IP - DATA CENTER PUBLIC IP ADDRESS
 '''
 
 
-def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip=None):
+def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip="1.1.1.1"):
     gw_list = []
     ping_dict = {}
     split_trace = ''

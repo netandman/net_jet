@@ -21,8 +21,20 @@ def connect_dev(ipaddr, uname, passw):
         ssh = ConnectHandler(**device)
         return ssh
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as error:
-        print(error)
         return error
+
+
+'''
+CONNECT TO DEVICE ACCORDING TO IPADDR AND SEND SHOW COMMAND
+THEN PARSING THE SHOW COMMAND RESULT BY REGULAR EXPRESSIONS AND THE METHOD SEARCH
+
+CONNECTION ATTRIBUTES
+IPADDR - CORE MGMT IP ADDRESS
+INTF - CORE INTERNET PROVIDER INTERFACES
+UNAME - USERNAME
+PASSW - PASSWORD
+'''
+
 
 def check_core_intf_isp(ipaddr, intf, uname, passw):
     errors_dict = {}
@@ -38,45 +50,71 @@ def check_core_intf_isp(ipaddr, intf, uname, passw):
     for line in split_show:
         match = re.search(regex, line)
         if match:
+            # compare the last group of the expression with string prot_status to catch first 3 groups of regex
             if match.lastgroup == 'prot_status':
                 errors_dict = match.groupdict()
             else:
+                # add last group name and the value of the group
                 errors_dict[match.lastgroup] = match.group(match.lastgroup)
+    # add raw value
     errors_dict["output"] = output
     return errors_dict
 
 
-def check_router_gw(ipaddr, isp_gw, uname, passw):
+'''
+CONNECT TO THE DEVICE WITH IPADDR AND SEND COMMAND TO GET INFO OF DEFAULT ROUTS
+THEN PARSING THE RESULT BY THE REGULAR EXPRESSION
+ADD THE GW ADDRESS FROM RUN CONFIG TO THE GW LIST
+AFTER THAT WE COMPARE THE NETWORK OF ROUTER INTERFACE ADDRESS 
+IF GW IP INCLUDED IN THIS RANGE WE USE .IP METHOD TO INCLUDE THE ADDRESS IN ICMP COMMAND
+THEN PARSING THE PING COMMAND RESULT TO CREATE A DICTIONARY WITH KEYS
+
+CONNECTION ARGUMENTS
+IPADDR - ROUTER MGMT IP ADDRESS 
+ISP_RTR_INT - ROUTER PUBLIC IP ADDRESS
+UNAME - USERNAME
+PASSW - PASSWORD
+COD_IP - DATA CENTER PUBLIC IP ADDRESS
+'''
+
+
+def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip=None):
     gw_list = []
     ping_dict = {}
-    '''
-    далее методами ipaddress сравнить в какой диапазон входит какой адрес шлюза и исходя из этого 
-    или вернуть соотношения провайдер шлюз или выполнить пинг и вернуть результат 
-    '''
+    split_trace = ''
     ssh = connect_dev(ipaddr, uname, passw)
     command = "show run | i route 0.0.0.0"
     output = ssh.send_command(command)
     split_show = output.split('\n')
     regex = (r'ip route 0.0.0.0 0.0.0.0 (?P<gateway>\S+) \d+ name .*')
     regex_ping = (r'Success rate is (?P<icmp_percent>\d+)\s+\S+\s+[(]+(?P<icmp_packets>\S+)[)]+'
-                      r'.*round-trip min/avg/max = (?P<delay>\S+)\s+\S+'
-                      r'|Success rate is (?P<icmp_pcent>\d+)\s+\S+\s+[(]+(?P<icmp_pkts>\S+)[)]+')
+                  r'.*round-trip min/avg/max = (?P<delay>\S+)\s+\S+'
+                  r'|Success rate is (?P<icmp_pcent>\d+)\s+\S+\s+[(]+(?P<icmp_pkts>\S+)[)]+')
     for line in split_show:
         match = re.search(regex, line)
         if match:
             gw_list.append(match.group(match.lastgroup))
     for ip in gw_list:
+        # convert ip in ipaddress object to compare with the network range of the router intf
         ip_addr = ipaddress.ip_address(ip)
-        if ip_addr in isp_gw.network:
+        if ip_addr in isp_rtr_int.network:
             ping_gw = "ping " + str(ip_addr)
+            trace_cod = f"traceroute {cod_ip} source {isp_rtr_int.ip}"
             ping_result = ssh.send_command(ping_gw)
+            if cod_ip:
+                trace_result = ssh.send_command(trace_cod)
+                split_trace = trace_result.split('\n')
+            # prepare date to parse by regular expressions regex_ping
             split_ping = ping_result.split('\n')
             for lping in split_ping:
                 match_ping = re.search(regex_ping, lping)
                 if match_ping:
                     ping_dict = match_ping.groupdict()
+            # save raw data
             ping_dict["ping_result"] = ping_result
             ping_dict["ip_addr"] = str(ip_addr)
+            ping_dict["trace_result"] = split_trace
+
     return ping_dict
 
 

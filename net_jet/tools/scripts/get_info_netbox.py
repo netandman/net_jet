@@ -58,6 +58,10 @@ class GetNetbox:
         else:
             self.core_mgmt_ip = None
 
+    '''
+    GET ROUTER IP ADDRESS FROM FILTERING BY TENANT_ID AND TAG ROUTER, THEN GET FULL INFORMATION
+    ABOUT ROUTER WITH GET REQUEST
+    '''
     def router_ip(self):
         router = self.nb.dcim.devices.filter(tenant_id=self.lab_id, tag="router")
         if router:

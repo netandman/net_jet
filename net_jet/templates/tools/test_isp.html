@@ -55,12 +55,19 @@
   {% if user_message %}
     <h1>{{user_message}}</h1>
   {% endif %}
+    {% if isp_choice %}
+    {% endif %}
   <div class="test-result">
     <div class="card">
       <div class="card-header">
         Результаты тестирования
       </div>
       <div class="card-body">
+        {% if not isp_choice %}
+          <div class="spinner-grow" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        {% endif %}
         {% if isp_choice %}
           <p class="card-text">ТЕСТ 1. Анализ состояния интерфейса на ядре сети, {{ lab_choice }}</p>
         {% endif %}
@@ -98,6 +105,9 @@
           {% if router_main_gw.delay %}
           <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_main_gw.delay }}</p>
           {% endif %}
+          {% for trace in router_main_gw.trace_result %}
+          <p class="card-text">{{ trace }}</p>
+          {% endfor %}
         {% endif %}
         {% if router_backup_gw %}
           <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
@@ -117,6 +127,9 @@
           {% if router_backup_gw.delay %}
           <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_backup_gw.delay }}</p>
           {% endif %}
+          {% for trace in router_backup_gw.trace_result %}
+          <p class="card-text">{{ trace }}</p>
+          {% endfor %}
         {% endif %}
       </div>
     </div>

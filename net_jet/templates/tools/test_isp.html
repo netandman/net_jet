@@ -88,6 +88,7 @@
           <p class="card-text">Количество исходящих ошибок {{ core_isp_backup.output_errors }}</p>
         {% endif %}
         {% if router_main_gw %}
+          <hr>
           <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
           <p class="card-text">Проверка {{ router_main_gw.ip_addr }}, шлюз основного провайдера</p>
           {% if router_main_gw.icmp_percent %}
@@ -110,6 +111,7 @@
           {% endfor %}
         {% endif %}
         {% if router_backup_gw %}
+          <hr>
           <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
           <p class="card-text">Проверка {{ router_backup_gw.ip_addr }}, шлюз резервного провайдера</p>
           {% if router_backup_gw.icmp_percent %}
@@ -129,6 +131,27 @@
           {% endif %}
           {% for trace in router_backup_gw.trace_result %}
           <p class="card-text">{{ trace }}</p>
+          {% endfor %}
+        {% endif %}
+        {% if border_trace_main_gw %}
+          <hr>
+          <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
+          {% for key, val in border_trace_main_gw.items %}
+          <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
+          <p class="card-text">Трассировка с оборудования {{ key }}</p>
+            {% for trace in val.trace %}
+              <p class="card-text">{{ trace }}</p>
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+        {% if border_trace_backup_gw %}
+          <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
+          {% for key, val in border_trace_backup_gw.items %}
+          <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
+          <p class="card-text">Трассировка с оборудования {{ key }}</p>
+            {% for trace in val.trace %}
+              <p class="card-text">{{ trace }}</p>
+            {% endfor %}
           {% endfor %}
         {% endif %}
       </div>

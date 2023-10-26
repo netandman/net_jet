@@ -15,6 +15,8 @@ def test_isp(request):
     core_isp_backup = ""
     router_main_gw = ""
     router_backup_gw = ""
+    border_trace_main_gw = ""
+    border_trace_backup_gw = ""
     with open("C:/Python/myprojects/net_jet/net_jet/tools/scripts/private.yml") as src:
         credentials = yaml.safe_load(src)
     try:
@@ -37,20 +39,30 @@ def test_isp(request):
                 labs.core_isp_intf()
                 labs.router_ip()
                 labs.router_isp_intf()
+                labs.borders_ip()
                 if isp_choice == "isp_main":
                     core_isp_main = get_info_cisco_dev.check_core_intf_isp(str(labs.core_mgmt_ip),
                                                                 str(labs.main_isp_intf), username, passw)
                     try:
                         router_main_gw = get_info_cisco_dev.check_router_gw(str(labs.router_mgmt_ip),
-                                                                    labs.rtr_main_isp_ip, username, passw)
+                                                                            labs.rtr_main_isp_ip,
+                                                                            username, passw)
+                        border_trace_main_gw = get_info_cisco_dev.check_rtr_from_borders(labs.borders_dict,
+                                                                                         labs.rtr_main_isp_ip,
+                                                                                         username, passw)
                     except:
                         router_main_gw = {}
                 elif isp_choice == "isp_backup":
                     core_isp_backup = get_info_cisco_dev.check_core_intf_isp(str(labs.core_mgmt_ip),
-                                                                  str(labs.backup_isp_intf), username, passw)
+                                                                             str(labs.backup_isp_intf),
+                                                                             username, passw)
                     try:
                         router_backup_gw = get_info_cisco_dev.check_router_gw(str(labs.router_mgmt_ip),
-                                                                     labs.rtr_backup_isp_ip, username, passw)
+                                                                              labs.rtr_backup_isp_ip,
+                                                                              username, passw)
+                        border_trace_backup_gw = get_info_cisco_dev.check_rtr_from_borders(labs.borders_dict,
+                                                                                           labs.rtr_backup_isp_ip,
+                                                                                           username, passw)
                     except:
                         router_backup_gw = {}
             return render(request, 'tools/test_isp.html', context={'labs': labs_dict,
@@ -60,7 +72,9 @@ def test_isp(request):
                                                                    'core_isp_backup': core_isp_backup,
                                                                    'lab_choice': lab_choice,
                                                                    'router_main_gw': router_main_gw,
-                                                                   'router_backup_gw': router_backup_gw,})
+                                                                   'router_backup_gw': router_backup_gw,
+                                                                   'border_trace_main_gw': border_trace_main_gw,
+                                                                   'border_trace_backup_gw': border_trace_backup_gw})
     except ConnectionError:
         labs_dict = {}
         isp_dict = {}

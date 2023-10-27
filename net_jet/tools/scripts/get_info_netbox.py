@@ -141,7 +141,7 @@ class GetNetbox:
             as_intf = self.nb.dcim.interfaces.get(tag="as_intf", device_id=border_get.id)
             mgmt_intf = ipaddress.ip_interface(border_get.primary_ip4)
             border_mgmt_ip = str(mgmt_intf.ip)
-            borders_dict[str(border)] = {"mgmt_intf": border_mgmt_ip, "as_intf": as_intf}
+            borders_dict[str(border)] = {"mgmt_ip": border_mgmt_ip, "as_intf": as_intf}
         self.borders_dict = borders_dict
 
 

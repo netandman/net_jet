@@ -1,7 +1,12 @@
+from concurrent.futures import ThreadPoolExecutor
 import re
 import ipaddress
 from pprint import pprint
 #from get_info_netbox import GetNetbox
+from datetime import datetime
+from itertools import repeat
+import logging
+
 import yaml
 from netmiko import (
     ConnectHandler,
@@ -9,27 +14,48 @@ from netmiko import (
     NetmikoAuthenticationException,
 )
 
+logging.getLogger('paramiko').setLevel(logging.WARNING)
 
-def connect_dev(ipaddr, uname, passw, dev_type='cisco_ios'):
-    if dev_type == 'cisco_ios':
-        device = {'device_type': 'cisco_ios',
-                  'host': ipaddr,
-                  'username': uname,
-                  'password': passw,
-                  'secret': 'enablepass',
-                  }
+logging.basicConfig(
+    format='%(threadName)s %(name)s %(levelname)s: %(message)s',
+    level=logging.INFO,
+)
+
+def connect_dev(ipaddr, uname, passw, command, dev_type='cisco_xe'):
     if dev_type == 'cisco_xe':
-        device = {'device_type': 'cisco_xe',
+        device = {'device_type': dev_type,
                   'host': ipaddr,
                   'username': uname,
                   'password': passw,
                   'secret': 'enablepass',
                   "read_timeout_override": 12,
                   }
+    else:
+        device = {'device_type': dev_type,
+                  'host': ipaddr,
+                  'username': uname,
+                  'password': passw,
+                  'secret': 'enablepass',
+                  }
+    start_msg = '===> {} Connection: {}'
+    received_msg = '<=== {} Received:   {}'
+    ip = device['host']
+    logging.info(start_msg.format(datetime.now().time(), ip))
     try:
-        ssh = ConnectHandler(**device)
-        return ssh
+        if type(command) is list:
+            result_list = []
+            for cmd in command:
+                with ConnectHandler(**device) as ssh:
+                    result_list.append(ssh.send_command(cmd))
+                    logging.info(received_msg.format(datetime.now().time(), ip))
+            return result_list
+        else:
+            with ConnectHandler(**device) as ssh:
+                result = ssh.send_command(command)
+                logging.info(received_msg.format(datetime.now().time(), ip))
+            return result
     except (NetmikoTimeoutException, NetmikoAuthenticationException) as error:
+        logging.warning(error)
         return error
 
 
@@ -52,9 +78,8 @@ def check_core_intf_isp(ipaddr, intf, uname, passw):
              r'|\s+\S+ (?P<speed>\S+), media .*'
              r'|\s+(?P<input_errors>\d+) input errors, .*'
              r'|\s+(?P<output_errors>\d+) output errors, .*')
-    with connect_dev(ipaddr, uname, passw) as ssh:
-        command = "show int " + intf + " | i is|Description|errors"
-        output = ssh.send_command(command)
+    command = "show int " + intf + " | i is|Description|errors"
+    output = connect_dev(ipaddr, uname, passw, command, dev_type='cisco_ios')
     split_show = output.split('\n')
     for line in split_show:
         match = re.search(regex, line)
@@ -88,64 +113,74 @@ COD_IP - DATA CENTER PUBLIC IP ADDRESS
 
 
 def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip="91.217.227.1"):
-    gw_list = []
     ping_dict = {}
-    split_trace = ''
     regex = (r'ip route 0.0.0.0 0.0.0.0 (?P<gateway>\S+) \d+ name .*')
     regex_ping = (r'Success rate is (?P<icmp_percent>\d+)\s+\S+\s+[(]+(?P<icmp_packets>\S+)[)]+'
                   r'.*round-trip min/avg/max = (?P<delay>\S+)\s+\S+'
                   r'|Success rate is (?P<icmp_pcent>\d+)\s+\S+\s+[(]+(?P<icmp_pkts>\S+)[)]+')
     command = "show run | i route 0.0.0.0"
-    with connect_dev(ipaddr, uname, passw) as ssh:
-        output = ssh.send_command(command)
-        split_show = output.split('\n')
-        for line in split_show:
-            match = re.search(regex, line)
-            if match:
-                gw_list.append(match.group(match.lastgroup))
-        for ip in gw_list:
-            # convert ip in ipaddress object to compare with the network range of the router intf
-            ip_addr = ipaddress.ip_address(ip)
-            if ip_addr in isp_rtr_int.network:
-                ping_gw = "ping " + str(ip_addr)
-                trace_cod = f"traceroute {cod_ip} source {isp_rtr_int.ip} timeout 1"
-                ping_result = ssh.send_command(ping_gw)
-                if cod_ip:
-                    trace_result = ssh.send_command(trace_cod)
-                    split_trace = trace_result.split('\n')
-                # prepare date to parse by regular expressions regex_ping
-                split_ping = ping_result.split('\n')
-                for lping in split_ping:
-                    match_ping = re.search(regex_ping, lping)
-                    if match_ping:
-                        ping_dict = match_ping.groupdict()
-                # save raw data
-                ping_dict["ping_result"] = ping_result
-                ping_dict["ip_addr"] = str(ip_addr)
-                ping_dict["trace_result"] = split_trace
-
+    output = connect_dev(ipaddr, uname, passw, command, dev_type='cisco_ios')
+    split_show = output.split('\n')
+    gw_list = [match.group('gateway') for line in split_show if (match := re.search(regex, line))]
+    for ip in gw_list:
+        # convert ip in ipaddress object to compare with the network range of the router intf
+        ip_addr = ipaddress.ip_address(ip)
+        if ip_addr in isp_rtr_int.network:
+            ping_gw = "ping " + str(ip_addr)
+            ping_result = connect_dev(ipaddr, uname, passw, ping_gw)
+            # prepare date to parse by regular expressions regex_ping
+            split_ping = ping_result.split('\n')
+            for lping in split_ping:
+                match_ping = re.search(regex_ping, lping)
+                if match_ping:
+                    ping_dict = match_ping.groupdict()
+            # save raw data
+            ping_dict["ping_result"] = ping_result
+            ping_dict["ip_addr"] = str(ip_addr)
+        if cod_ip:
+            trace_cod = f"traceroute {cod_ip} source {isp_rtr_int.ip} timeout 1"
+            trace_result = connect_dev(ipaddr, uname, passw, trace_cod)
+            split_trace = trace_result.split('\n')
+            # save raw data
+            ping_dict["trace_result"] = split_trace
     return ping_dict
 
 
+'''
+CONCURRENT CONNECTION TO THE BORDER DEVICES FOR GETTING A ROUTE AND TRACE THE ISP IP ADDRESS
+THEN ADD THE DATA IN DATA DICTIONARY WITH A KEY SUCH AS A BORDER HOSTNAME
+AFTER THAT COMPARE THE STRINGS OF SPLIT RESULTS WITH THE REGEX EXPRESSION AND ADD MATCHED VALUES TO THE DATA DICTIONARY
+'''
+
+
 def check_rtr_from_borders(borders_dict, isp_rtr_int, uname, passw):
-    trace_route_dict = {}
+    borders_list = []
     regex = (r'Routing entry for (?P<route>\S+).*'
              r'|Last update from \S+ (?P<date_update>\S+) ago')
-    for key, val in borders_dict.items():
-        commands = [f"trace {isp_rtr_int.ip} source {val['as_intf']} timeout 1",
-                    f"show ip route {isp_rtr_int.ip}"]
-        with connect_dev(val['mgmt_intf'], uname, passw, dev_type='cisco_xe') as ssh:
-            for command in commands:
-                output = ssh.send_command(command)
-                split_output = output.split('\n')
-                if "trace" in command:
-                    trace_route_dict[key] = {"trace": split_output}
-                else:
-                    for line in split_output:
-                        match = re.search(regex, line)
-                        if match:
-                            trace_route_dict[key][match.lastgroup] = match.group(match.lastgroup)
-    return trace_route_dict
+    # connection to the devices
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        data = {}
+        # get the value of the borders_dict to make commands
+        for key, val in borders_dict.items():
+            commands = [f"trace {isp_rtr_int.ip} source {val['as_intf']} timeout 1",
+                        f"show ip route {isp_rtr_int.ip}"]
+            # make borders list with borders ip addresses for thread pool executor
+            borders_list.append(val['mgmt_ip'])
+        result = executor.map(connect_dev, borders_list, repeat(uname), repeat(passw), repeat(commands))
+    # split values to mach the result with device
+    for device, output in zip(borders_list, result):
+        for brd, vl in borders_dict.items():
+            if vl['mgmt_ip'] == device:
+                # generate the devices dictionary, split method to make list of string and help parsing
+                data[brd] = {'mgmt_ip': device,
+                             **{'trace': out_line.split('\n') for out_line in output if "Tracing" in out_line},
+                             **{'route': out_line.split('\n') for out_line in output if "Routing" in out_line}}
+    for key, val in data.items():
+        for line in val['route']:
+            match = re.search(regex, line)
+            if match:
+                data[key][match.lastgroup] = match.group(match.lastgroup)
+    return data
 
 
 if __name__ == "__main__":
@@ -163,5 +198,5 @@ if __name__ == "__main__":
     labs.router_ip()
     labs.router_isp_intf()
     labs.borders_ip()
-    pprint(check_rtr_from_borders(labs.borders_dict,labs.rtr_main_isp_ip,username, passw))
+    pprint(check_rtr_from_borders(labs.borders_dict, labs.rtr_main_isp_ip, username, passw))
 

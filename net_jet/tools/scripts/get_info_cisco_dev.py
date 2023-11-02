@@ -108,11 +108,11 @@ IPADDR - ROUTER MGMT IP ADDRESS
 ISP_RTR_INT - ROUTER PUBLIC IP ADDRESS
 UNAME - USERNAME
 PASSW - PASSWORD
-COD_IP - DATA CENTER PUBLIC IP ADDRESS
+PUBLIC_IP - PUBLIC IP ADDRESS (FOR EXAMPLE COD IP ADDRESS)
 '''
 
 
-def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip="91.217.227.1"):
+def check_router_gw(ipaddr, isp_rtr_int, uname, passw, public_ip="8.8.8.8"):
     ping_dict = {}
     regex = (r'ip route 0.0.0.0 0.0.0.0 (?P<gateway>\S+) \d+ name .*')
     regex_ping = (r'Success rate is (?P<icmp_percent>\d+)\s+\S+\s+[(]+(?P<icmp_packets>\S+)[)]+'
@@ -137,8 +137,8 @@ def check_router_gw(ipaddr, isp_rtr_int, uname, passw, cod_ip="91.217.227.1"):
             # save raw data
             ping_dict["ping_result"] = ping_result
             ping_dict["ip_addr"] = str(ip_addr)
-        if cod_ip:
-            trace_cod = f"traceroute {cod_ip} source {isp_rtr_int.ip} timeout 1"
+        if public_ip:
+            trace_cod = f"traceroute {public_ip} source {isp_rtr_int.ip} timeout 1"
             trace_result = connect_dev(ipaddr, uname, passw, trace_cod)
             split_trace = trace_result.split('\n')
             # save raw data

@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('net_jet.main.urls')),
     path('articles/', include('net_jet.articles.urls')),
     path('tools/', include('net_jet.tools.urls')),
+    path('users/', include('net_jet.users.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

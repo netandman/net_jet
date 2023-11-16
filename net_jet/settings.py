@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os
 import ldap
 from django_auth_ldap.config import LDAPSearch
 from django_auth_ldap.config import ActiveDirectoryGroupType
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'net_jet.main',
     'net_jet.articles',
     'net_jet.tools',
+    'net_jet.users',
 ]
 
 MIDDLEWARE = [
@@ -159,7 +159,7 @@ AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType(name_attr="cn")
 #AUTH_LDAP_REQUIRE_GROUP = "cn=active,"
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_superuser": "cn=django-admins,cn=Users,dc=example,dc=local",
-    "is_staff": "cn=django-admins,cn=Users,dc=example,dc=local"
+    "is_staff": "cn=django-staff,cn=Users,dc=example,dc=local"
 }
 
 AUTH_LDAP_FIND_GROUP_PERMS = True

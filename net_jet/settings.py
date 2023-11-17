@@ -156,7 +156,7 @@ AUTH_LDAP_GROUP_SEARCH = LDAPSearch("cn=Users,dc=example,dc=local",
                                     ldap.SCOPE_SUBTREE,
                                     "(objectClass=Group)")
 AUTH_LDAP_GROUP_TYPE = ActiveDirectoryGroupType(name_attr="cn")
-#AUTH_LDAP_REQUIRE_GROUP = "cn=active,"
+
 AUTH_LDAP_USER_FLAGS_BY_GROUP = {
     "is_superuser": "cn=django-admins,cn=Users,dc=example,dc=local",
     "is_staff": "cn=django-staff,cn=Users,dc=example,dc=local"

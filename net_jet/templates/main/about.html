@@ -1,7 +1,44 @@
-{% extends 'main/layout.html'%}
+{% extends 'layout.html'%}
+{% load static %}
 
 {% block title %}О проекте{% endblock %}
 
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'main/css/main.css' %}">
+{% endblock %}
+
 {% block content %}
-    <h1>О проекте</h1>
+    <div style="background-image: url({% static 'main/img/network_about.jpg' %});
+        background-size: cover;
+        max-weight: auto;
+        max-height: auto">
+        <div class="container">
+            <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded about_netjet">
+                <div class="h1 border-bottom">О NetJet</div>
+                <p>NetJet в первую очередь разработан для помощи инженерам в тестировании сервис провайдеров,
+                    сбора информации с различных сетевых устройств в автоматическом режиме и формирования рекомендаций к дальнейшим
+                    действиям.</p>
+                <p>На главной странице, в разделе "Инструменты", расположены основные категории средств получения информации.</p>
+                <p>Раздел "Сервис провайдеры" формирует данные о контактах основного и резервного провайдеров согласно
+                    выбранного инженером объекта (тенанта). Эти данные включают актуальную информацию о номере договора, телефонах и
+                    адресах email.</p>
+                <p>Раздел "Проверка доступности" выполнен из двух раскрывающихся списков. Первый список состоит из объектов тестирования,
+                    второй список формируется на основе первого и включает в себя сервис провайдеров, которые инженер может протестировать. После
+                    выбора провайдера NetJet в автоматическом режиме тестирует интерфейс подключения провайдера, доступность шлюза, доступность
+                    внешнего адреса (в нашем случае адрес ЦОД), запускает трассировку до внешнего адреса и с внешнего адреса до выбранного
+                    объекта. В результате тестирования инженеру возвращаются результаты тестирования как в форме обычного отчета, так и
+                    данные для открытия обращения в технической поддержке провайдера.</p>
+                <p>Основное меню главной страницы так же включает раздел "Статьи" где будет публиковаться общеразвивающая информация о
+                    вычислительных сетях.</p>
+                <p>Развитие проекта NetJet продолжается и будет дополнено новыми функция для помощи инженерам в их повседневной деятельности.</p>
+            </div>
+        </div>
+    </div>
 {% endblock %}

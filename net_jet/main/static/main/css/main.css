@@ -6,6 +6,10 @@
     text-transform: uppercase;
 }
 
+.navbar .navbar-nav .dropdown-item {
+    font-family: 'Roboto Serif', serif;
+}
+
 .add_menu a::after {
     content: '';
     display: block;
@@ -122,3 +126,14 @@
     transform: scale(1);
 }
 /* Footer */
+
+/*About*/
+.about_netjet {
+    display: block;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    color: #696969;
+    margin-top: 200px;
+}
+/*About*/

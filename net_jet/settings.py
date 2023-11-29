@@ -14,6 +14,7 @@ from pathlib import Path
 import ldap
 from django_auth_ldap.config import LDAPSearch
 from django_auth_ldap.config import ActiveDirectoryGroupType
+import keyring as kr
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -135,11 +136,11 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-AUTH_LDAP_SERVER_URI = "ldap://172.17.0.17"
+AUTH_LDAP_SERVER_URI = "ldap://172.17.0.23"
 AUTH_LDAP_AUTHORIZE_ALL_USERS = True
 AUTH_LDAP_PERMIT_EMPTY_PASSWORD = True
 AUTH_LDAP_BIND_DN = "cn=admin,cn=Users,dc=example,dc=local"
-AUTH_LDAP_BIND_PASSWORD = "test@1234"
+AUTH_LDAP_BIND_PASSWORD = kr.get_password("ldap", "admin")
 
 AUTH_LDAP_USER_SEARCH = LDAPSearch("cn=Users,dc=example,dc=local",
                                    ldap.SCOPE_SUBTREE,

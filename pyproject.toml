@@ -13,6 +13,7 @@ pillow = "^10.0.1"
 pynetbox = "^7.2.0"
 netmiko = "^4.2.0"
 django-auth-ldap = "^4.6.0"
+keyring = "^24.3.0"
 
 
 [build-system]

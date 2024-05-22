@@ -19,13 +19,13 @@
   <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="{% static 'main/img/oxygen_cod_3.jpeg' %}" class="d-block w-100" alt="dc1">
+        <img src="{% static 'main/img/DC01.jpeg' %}" class="d-block w-100" alt="dc1">
       </div>
       <div class="carousel-item">
-        <img src="{% static 'main/img/data_center_2.jpg' %}" class="d-block w-100" alt="dc2">
+        <img src="{% static 'main/img/DC02.jpeg' %}" class="d-block w-100" alt="dc2">
       </div>
       <div class="carousel-item">
-        <img src="{% static 'main/img/oxygen_cod_2.png' %}" class="d-block w-100" alt="dc3">
+        <img src="{% static 'main/img/DC03.jpeg' %}" class="d-block w-100" alt="dc3">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying" data-bs-slide="prev">
@@ -43,15 +43,7 @@
     <div class="card">
       <div class="card-body">
         <p class="card-text text-center"><img src="{% static 'main/img/click.png' %}"></p>
-        <p class="card-text text-center">Запуск системы одним кликом</p>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-3 col-sm-6">
-    <div class="card">
-      <div class="card-body">
-        <p class="card-text text-center"><img src="{% static 'main/img/looking_for.png' %}"></p>
-        <p class="card-text text-center">Автоматическое тестирование</p>
+        <a class="card-text text-center" href="{% url 'providers' %}">Сервис провайдеры</a>
       </div>
     </div>
   </div>
@@ -59,15 +51,39 @@
     <div class="card">
       <div class="card-body">
         <p class="card-text text-center"><img src="{% static 'main/img/monitor.png' %}"></p>
-        <p class="card-text text-center">Подробный отчет за секунды</p>
+        <a class="card-text text-center" href="{% url 'test_isp' %}">Проверка доступности</a>
       </div>
     </div>
   </div>
   <div class="col-lg-3 col-sm-6">
     <div class="card">
       <div class="card-body">
-        <p class="card-text text-center"><img src="{% static 'main/img/award.png' %}"></p>
-        <p class="card-text text-center">Система рекомендаций</p>
+        <p class="card-text text-center"><img src="{% static 'main/img/inactive_intf.png' %}"></p>
+        <a class="card-text text-center" href="{% url 'inactive_intf' %}">Неактивные интерфейсы</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text text-center"><img src="{% static 'main/img/find_intf_ip.png' %}"></p>
+        <a class="card-text text-center" href="{% url 'search_arp_by_mac' %}">Поиск ip адреса по mac</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text text-center"><img src="{% static 'main/img/ipcalc.png' %}"></p>
+        <a class="card-text text-center" href="{% url 'ip_calc' %}">IP калькулятор</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-3 col-sm-6">
+    <div class="card">
+      <div class="card-body">
+        <p class="card-text text-center"><img src="{% static 'main/img/switch_intf.png' %}"></p>
+        <a class="card-text text-center" href="{% url 'switch_intf' %}">Интерфейс инфо</a>
       </div>
     </div>
   </div>
@@ -78,11 +94,10 @@
   <div class="card-img-overlay">
     <h5 class="card-title">NetJet</h5>
     <p class="card-text">Netjet специально разработан для автоматизированного тестирования и анализа сети компании.
-      Этот инструмент призван быть надежным, простым и оперативным. Несколькими кликами на NJ
-      портале, специалист может получить все данные в удобной форме с рекомендациями по дальнейшим действиям. Получаем все в
-      одном месте за несколько шагов. Формируем готовые данные для работы с сервис провайдерами. С помощью готовых шаблонов и ИИ анализируем
-      метрики работы сети.
-      <img src="{% static 'main/img/oxygen_cod_4.jpg' %}" class="card-img" alt="overlay_img_explanation"></p>
+      Несколькими кликами на NJ портале, специалист может получить все данные в удобной форме с рекомендациями по
+      дальнейшим действиям. Формируем готовые данные для работы с сервис провайдерами. С помощью готовых шаблонов и ИИ
+      анализируем метрики работы сети.
+      <img src="{% static 'main/img/DC04.jpeg' %}" class="card-img" alt="overlay_img_explanation"></p>
   </div>
 </div>
 {% endblock %}

@@ -33,4 +33,17 @@
     margin-top: 10px;
     text-indent: 1%;
 }
+
+.second-btn {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 /* ISP choice */
+
+/* Recommendations */
+.recommendations {
+    font-family: 'Roboto Serif', serif;
+    font-size: 20px;
+}
+/* Recommendations */

@@ -1,0 +1,7 @@
+Value vlan_id (\d+)
+Value destination_address (\S+)
+Value type (\S+)
+Value List destination_port (\S+)
+
+Start
+  ^${vlan_id}\s+${destination_address}\s+${type}\s+\S+\s+${destination_port} -> Record

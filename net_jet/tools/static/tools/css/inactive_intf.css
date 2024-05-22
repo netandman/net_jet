@@ -1,0 +1,58 @@
+/* Main block */
+/*.inactive_intf {
+    display: block;
+    margin-top: 50px;
+    margin-bottom: 10px;
+}
+/* Main block */
+
+/* Place choice */
+.place-choose h4 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 150px;
+    text-indent: 1%;
+}
+
+.form-select {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* Place choice */
+
+/* Weeks choice */
+.week-choose h4 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-indent: 1%;
+}
+
+.validationServer04 {
+    font-family: 'Open Sans', sans-serif;
+/*    font-weight: bold; */
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-indent: 1%;
+}
+
+.invalid-feedback {
+    font-family: 'Open Sans', sans-serif;
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-indent: 1%;
+}
+
+.btn-secondary {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* Weeks choice */
+

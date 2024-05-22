@@ -25,17 +25,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav top-menu">
-                        {% if user.is_superuser or user.is_staff %}
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Инструменты</a>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'providers' %}">Сервис провайдеры</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'test_isp' %}">Проверка доступности</a></li>
-                                </ul>
-                            </li>
-                        {% endif %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Инструменты</a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'providers' %}">Сервис провайдеры</a></li>
+                                <li><a class="dropdown-item" href="{% url 'test_isp' %}">Проверка доступности</a></li>
+                                <li><a class="dropdown-item" href="{% url 'inactive_intf' %}">Поиск неактивных интерфейсов</a></li>
+                                <li><a class="dropdown-item" href="{% url 'search_arp_by_mac' %}">Поиск ip адреса по mac</a></li>
+                                <li><a class="dropdown-item" href="{% url 'ip_calc' %}">Ip калькулятор</a></li>
+                                <li><a class="dropdown-item" href="{% url 'switch_intf' %}">Интерфейс инфо</a></li>
+                                <li><a class="dropdown-item" href="https://prtg.invitro.ru/public/mapshow.htm?id=24863&mapid=0D0A9651-4308-4939-8220-070C70395B88" target="_blank">Карта сети</a></li>
+                                <li><a class="dropdown-item" href="https://netbox.invitro.ru/" target="_blank">NetBox</a></li>
+                            </ul>
+                        </li>
                         <li class="nav-item add_menu">
-                            <a class="nav-link" href="{% url 'articles_index' %}">Статьи</a>
+                            <a class="nav-link" href="{% url 'articles_index' %}">Мануалы</a>
                         </li>
                         {% if user.is_superuser %}
                             <li class="nav-item add_menu">
@@ -43,7 +47,7 @@
                             </li>
                         {% endif %}
                         <li class="nav-item add_menu">
-                            <a class="nav-link" href="#">Контакты</a>
+                            <a class="nav-link" href="https://confluence.invitro.ru/pages/viewpage.action?pageId=206667786" target="_blank">Контакты</a>
                         </li>
                     </ul>
 
@@ -80,11 +84,15 @@
                     </div>
 
                     <div class="col-md-3 col-6">
-                        <a href="#">Контакты</a href="#">
+                        <a href="https://confluence.invitro.ru/pages/viewpage.action?pageId=206667786" target="_blank">Контакты</a>
                     </div>
                 </div>
             </div>
         </section>
+        <p id="copyright">Copyright &copy;</p>
+        <script>
+            document.getElementById('copyright').innerHTML = ' Copyright &copy; ' + new Date().getFullYear() + ' Network Jet Technology NJ ver. 1.3';
+        </script>
     </footer>
     <script src="{% static 'main/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 </body>

@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Поиск ip адреса по mac{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'tools/css/search_arp_by_mac.css' %}">
+{% endblock %}
+
+{% block content %}
+  <section class="search_arp_by_mac">
+    <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %})">
+      <div class="place-choice">
+      <h4>Выберите площадку для проверки</h4>
+        <form action="{% url 'search_arp_by_mac' %}" method="post">
+          {% csrf_token %}
+          <select class="form-select w-50" aria-label="Default select example" name="places">
+            {% for place, core in core_dict.items %}
+              <option {% if place_choice == place %} selected {% endif %} value="{{ place }}">{{ place }}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" class="btn btn-secondary" value="Выбрать" />
+        </form>
+      </div>
+      <div class="switch-choose">
+        <h4>Выберите коммутатор</h4>
+        <form action="{% url 'search_arp_by_mac' %}" method="post">
+          {% csrf_token %}
+          <input name="places" type="hidden" value="{{ place_choice|default_if_none:'' }}">
+          <select class="form-select w-50" aria-label="Default select example" name="switches">
+            {% for switch, value in place_switches_dict.items %}
+              <option {% if switch_choice == switch %} selected {% endif %} value="{{ switch }}">{{ switch }}</option>
+            {% endfor %}
+          </select>
+          {% if not place_switches_dict %}
+          <input type="button" class="btn btn-secondary second-btn" disabled value="Выбрать">
+          {% endif %}
+          {% if place_switches_dict %}
+          <input type="submit" class="btn btn-secondary second-btn" value="Выбрать" />
+          {% endif %}
+        </form>
+      </div>
+      <div class="intf-choose">
+        <h4>Выберите интерфейс</h4>
+        <form action="{% url 'search_arp_by_mac' %}" method="post">
+          {% csrf_token %}
+          <input name="switches" type="hidden" value="{{ switch_choice|default_if_none:'' }}">
+          <input name="places" type="hidden" value="{{ place_choice|default_if_none:'' }}">
+          <select class="form-select w-50" aria-label="Default select example" name="interfaces">
+            {% for dev, val_list in switch_intf_dict.items %}
+              {% for val_dict in val_list %}
+                  <option {% if interface_choice == val_dict.port %} selected {% endif %} value="{{ val_dict.port }}">{{ val_dict.port }}</option>
+              {% endfor %}
+            {% endfor %}
+          </select>
+          {% if not switch_intf_dict %}
+          <input type="button" class="btn btn-secondary second-btn" disabled value="Выбрать">
+          {% endif %}
+          {% if switch_intf_dict %}
+          <input type="submit" class="btn btn-secondary second-btn" value="Выбрать" />
+          {% endif %}
+        </form>
+      </div>
+      <div class="test-result">
+        <div class="card">
+          <div class="card-header">
+            Запись в таблице arp запросов
+          </div>
+          <div class="card-body">
+            {% if not interface_choice %}
+              <div class="spinner-grow" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            {% endif %}
+            {% if user_message %}
+              <p class="card-text">{{ user_message }}</p>
+            {% endif %}
+            {% if interface_choice %}
+              {% if arp_result %}
+                <p class="card-text">IP адрес {{ arp_result.ip_addr }}</p>
+                <p class="card-text">MAC адрес {{ arp_result.mac_addr }}</p>
+                <p class="card-text">VLAN {{ arp_result.vlan_id }}</p>
+                <p class="card-text">Время записи в arp таблице {{ arp_result.age }}</p>
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

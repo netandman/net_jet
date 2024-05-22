@@ -44,21 +44,37 @@
 }
 /* Carousel */
 
-/* Cards benefits */
+/* Cards tools */
 .row {
     margin-bottom: 50px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.card .card-body p {
+.card .card-body a {
     display: block;
     font-family: 'Roboto Serif', serif;
     font-size: 20px;
+    color: #696969;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
-/* Cards benefits */
+
+.card .card-body a::after {
+    content: '';
+    display: block;
+    width: 100%;
+    background-color: #111;
+    height: 1px;
+    transition: all .3s;
+    transform: scale(0);
+}
+
+.card .card-body a:hover::after {
+    transform: scale(1);
+}
+/* Cards tools */
 
 /* Banner about */
 .text-bg-white {

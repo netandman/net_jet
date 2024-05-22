@@ -1,0 +1,9 @@
+Value port (\d+/\d+/\d+)
+Value status (\w+/\w+)
+Value speed (\S+)
+Value duplex (\S+)
+Value vlan (\d+)
+Value type (\S+)
+
+Start
+  ^${port}\s+${status}\s+${speed}\s+${duplex}\s+${vlan}\s+${type}.+ -> Record

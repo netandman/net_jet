@@ -1,0 +1,7 @@
+Value Required port (\S+)
+Value Required status (\S+)
+Value status_change (\S+)
+
+Start
+  ^\s+Ethernet${port} is ${status}, line protocol is down
+  ^\s+Time since last status change:${status_change}.* -> Record

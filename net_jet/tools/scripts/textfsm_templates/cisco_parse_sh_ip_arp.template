@@ -1,0 +1,7 @@
+Value ip_addr ((\d+\.){3}\d+)
+Value age (\d+)
+Value mac_addr (\w{4}\.\w{4}\.\w{4})
+Value vlan_id (\d+)
+
+Start
+  ^\S+\s+${ip_addr}\s+${age}\s+${mac_addr}\s+\S+\s+Vlan${vlan_id} -> Record

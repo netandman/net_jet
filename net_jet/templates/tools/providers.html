@@ -15,51 +15,54 @@
 {% endblock %}
 
 {% block content %}
-<section class="providers-lab">
-  <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
-    background-size: cover;
-    max-weight: 25%;
-    max-height: 25%">
-  <div class="lab-choose">
-    <h4>Выберите лабораторию</h4>
-    <form action="{% url 'providers' %}" method="post">
-      {% csrf_token %}
-      <select class="form-select w-25 providers" aria-label="Default select example" name="labs">
-        {% for lab in labs %}
-          <option value="{{ lab.name }}">{{ lab.name }}</option>
-        {% endfor %}
-      </select>
-      <input type="submit" class="btn btn-secondary" value="Выбрать" />
-    </form>
-  </div>
-    <div class="isp">
-      <div class="card">
-        <div class="card-header">
-          Данные сервис провайдеров
-        </div>
-        <div class="card-body">
-          {% if not isp_dict %}
-            <h5 class="card-title placeholder-wave">
-              <span class="placeholder col-5 bg-secondary"></span>
-            </h5>
-            <p class="card-text placeholder-wave">
-              <span class="placeholder col-6 bg-secondary"></span>
-              <span class="placeholder col-7 bg-secondary"></span>
-              <span class="placeholder col-8 bg-secondary"></span>
-            </p>
+  <section class="providers-lab">
+    <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
+      background-size: cover;
+      max-weight: 25%;
+      max-height: 25%">
+    <div class="lab-choose">
+      <h4>Выберите лабораторию</h4>
+      <form action="{% url 'providers' %}" method="post">
+        {% csrf_token %}
+        <select class="form-select w-25 providers" aria-label="Default select example" name="labs">
+          {% for lab in labs %}
+            <option value="{{ lab.name }}">{{ lab.name }}</option>
+          {% endfor %}
+        </select>
+        <input type="submit" class="btn btn-secondary" value="Выбрать" />
+      </form>
+    </div>
+      <div class="isp">
+        <div class="card">
+          <div class="card-header">
+            Данные сервис провайдеров
+          </div>
+          <div class="card-body">
+            {% if not isp_dict %}
+              <h5 class="card-title placeholder-wave">
+                <span class="placeholder col-5 bg-secondary"></span>
+              </h5>
+              <p class="card-text placeholder-wave">
+                <span class="placeholder col-6 bg-secondary"></span>
+                <span class="placeholder col-7 bg-secondary"></span>
+                <span class="placeholder col-8 bg-secondary"></span>
+              </p>
+            {% endif %}
+            {% if user_message %}
+            <p class="card-text">{{ user_message }}</p>
           {% endif %}
-          {% if isp_dict %}
-            {% for key, val in isp_dict.items %}
-              <h5 class="card-title">{{ key }}</h5>
-              <p class="card-text">{{ val.account }}</p>
-              <p class="card-text">{{ val.portal_url }}</p>
-              <p class="card-text">{{ val.noc_contact }}</p>
-              <p class="card-text">{{ val.admin_contact }}</p>
-              <p class="card-text">{{ val.comments }}</p>
-            {% endfor %}
-          {% endif %}
+            {% if isp_dict %}
+              {% for key, val in isp_dict.items %}
+                <h5 class="card-title">{{ key }}</h5>
+                <p class="card-text">{{ val.account }}</p>
+                <p class="card-text">{{ val.portal_url }}</p>
+                <p class="card-text">{{ val.noc_contact }}</p>
+                <p class="card-text">{{ val.admin_contact }}</p>
+                <p class="card-text">{{ val.comments }}</p>
+              {% endfor %}
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
-</section>
+  </section>
 {% endblock %}

@@ -1,0 +1,26 @@
+/* Main block */
+.search_arp_by_mac {
+    display: block;
+    margin-top: 150px;
+    margin-bottom: 10px;
+}
+/* Main block */
+
+/* Place choice */
+h4 {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-top: 10px;
+    text-indent: 1%;
+}
+
+.form-select {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+/* Place choice */

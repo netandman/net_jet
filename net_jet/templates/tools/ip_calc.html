@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}IP калькулятор{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'tools/css/ip_calc.css' %}">
+{% endblock %}
+
+{% block content %}
+  <section class="ip_calc">
+    <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
+      background-size: cover;
+      max-weight: 25%;
+      max-height: 25%">
+      <div class="container">
+        <div class="card shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+          {% if form.non_field_errors %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                 style="margin-top: 50px;">
+                {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+          <div class="card-body">
+            <form action="{% url 'ip_calc' %}" method="post">
+              {% csrf_token %}
+              <div class="form-group">
+                {{ form.network }}
+              </div>
+              <div class="form-group">
+                {{ form.mask }}
+              </div>
+              <input class="btn btn-secondary" type="submit" value="Посчитать">
+            </form>
+          </div>
+        </div>
+        <div class="test-result">
+          <div class="card">
+            <div class="card-header">
+          Результаты расчетов
+            </div>
+            <div class="card-body">
+              {% if user_massage %}
+                <h4>{{ user_massage }}</h4>
+              {% endif %}
+              {% if not user_massage %}
+                <p class="card-text">Подсеть {{ network_dict.network }} {{ network_dict.with_netmask }}</p>
+                <p class="card-text">Обратная маска {{ network_dict.with_hostmask }}</p>
+                <p class="card-text">Количество адресов {{ network_dict.num_address }}</p>
+                <p class="card-text">Бродкаст {{ network_dict.broadcast }}</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

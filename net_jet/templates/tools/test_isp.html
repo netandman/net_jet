@@ -15,148 +15,196 @@
 {% endblock %}
 
 {% block content %}
-<section class="test-lab">
-  <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
-      background-size: cover;
-      max-weight: 25%;
-      max-height: 25%">
-  <div class="test-lab-choice">
-    <h4>Выберите лабораторию для проверки сети</h4>
+  <section class="test-lab">
+    <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %})">
+    <div class="test-lab-choice">
+      <h4>Выберите лабораторию для проверки сети</h4>
+        <form action="{% url 'test_isp' %}" method="post">
+          {% csrf_token %}
+          <select class="form-select w-50" aria-label="Default select example" name="labs">
+            {% for lab in labs %}
+              <option {% if lab_choice == lab.name %} selected {% endif %} value="{{ lab.name }}">{{ lab.name }}</option>
+            {% endfor %}
+          </select>
+          <input type="submit" class="btn btn-secondary" value="Выбрать" />
+        </form>
+    </div>
+    <div class="test-isp">
+      <h4>Выберите интернет провайдера</h4>
       <form action="{% url 'test_isp' %}" method="post">
         {% csrf_token %}
-        <select class="form-select w-50" aria-label="Default select example" name="labs">
-          {% for lab in labs %}
-            <option value="{{ lab.name }}">{{ lab.name }}</option>
+        <input name="labs" type="hidden" value="{{ lab_choice|default_if_none:'' }}">
+        <select class="form-select w-50" aria-label="Default select example" name="isp">
+          {% for key, val in isp_dict.items %}
+            {% for tag in val.tags %}
+            <option {% if isp_choice == tag.slug %} selected {% endif %} value="{{ tag.slug }}">{{ key }}</option>
+            {% endfor %}
           {% endfor %}
         </select>
-        <input type="submit" class="btn btn-secondary" value="Выбрать" />
+        {% if not isp_dict%}
+        <input type="button" class="btn btn-secondary second-btn" disabled value="Выбрать">
+        {% endif %}
+        {% if isp_dict %}
+        <input type="submit" class="btn btn-secondary second-btn" value="Выбрать" />
+        {% endif %}
       </form>
-  </div>
-  <div class="test-isp">
-    <h4>Выберите интернет провайдера</h4>
-    <form action="{% url 'test_isp' %}" method="post">
-      {% csrf_token %}
-      <select class="form-select w-50" aria-label="Default select example" name="isp">
-        {% for key, val in isp_dict.items %}
-          {% for tag in val.tags %}
-          <option value="{{ tag.slug }}">{{ key }}</option>
-          {% endfor %}
-        {% endfor %}
-      </select>
-      {% if not isp_dict%}
-      <input type="button" class="btn btn-secondary" disabled value="Выбрать">
-      <p>Данные загружаются, пожалуйста ожидайте</p>
-      {% endif %}
-      {% if isp_dict %}
-      <input type="submit" class="btn btn-secondary" value="Выбрать" />
-      {% endif %}
-    </form>
-  </div>
-  {% if user_message %}
-    <h1>{{user_message}}</h1>
-  {% endif %}
-    {% if isp_choice %}
-    {% endif %}
-  <div class="test-result">
-    <div class="card">
-      <div class="card-header">
-        Результаты тестирования
-      </div>
-      <div class="card-body">
-        {% if not isp_choice %}
-          <div class="spinner-grow" role="status">
-            <span class="visually-hidden">Loading...</span>
+    </div>
+    <div class="test-result">
+      <div class="card">
+        <div class="card-header">
+          Результаты тестирования
+        </div>
+        <div class="card-body">
+          {% if not isp_choice %}
+            <div class="spinner-grow" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          {% endif %}
+          {% if user_message %}
+            <p class="card-text">{{ user_message }}</p>
+          {% endif %}
+          {% if isp_choice %}
+            <p class="card-text">ТЕСТ 1. Анализ состояния интерфейса на ядре сети, {{ lab_choice }}</p>
+          {% endif %}
+          {% if core_isp_main %}
+          {% if core_isp_main.interface %}
+          <div class="card text-bg-secondary mb-3 recommendations">
+            <div class="card-header">Описание результата тестирования</div>
+            <div class="card-body">
+              {% for keys, descripts in recommendations.errors_intf_rcm.items %}
+              <p class="card-text">{{ descripts }}</p>
+              {% endfor %}
+            </div>
           </div>
-        {% endif %}
-        {% if isp_choice %}
-          <p class="card-text">ТЕСТ 1. Анализ состояния интерфейса на ядре сети, {{ lab_choice }}</p>
-        {% endif %}
-        {% if core_isp_main %}
-          <p class="card-text">Проверка {{ core_isp_main.interface }}, описание {{ core_isp_main.description }}</p>
-          <p class="card-text">Согласованная скорость {{ core_isp_main.speed }}</p>
-          <p class="card-text">Состояние интерфейса {{ core_isp_main.intf_status }}</p>
-          <p class="card-text">Состояние протокола {{ core_isp_main.prot_status }}</p>
-          <p class="card-text">Количество входящих ошибок {{ core_isp_main.input_errors }}</p>
-          <p class="card-text">Количество исходящих ошибок {{ core_isp_main.output_errors }}</p>
-        {% endif %}
-        {% if core_isp_backup %}
-          <p class="card-text">Проверка {{ core_isp_backup.interface }}, описание {{ core_isp_backup.description }}</p>
-          <p class="card-text">Согласованная скорость {{ core_isp_backup.speed }}</p>
-          <p class="card-text">Состояние интерфейса {{ core_isp_backup.intf_status }}</p>
-          <p class="card-text">Состояние протокола {{ core_isp_backup.prot_status }}</p>
-          <p class="card-text">Количество входящих ошибок {{ core_isp_backup.input_errors }}</p>
-          <p class="card-text">Количество исходящих ошибок {{ core_isp_backup.output_errors }}</p>
-        {% endif %}
-        {% if router_main_gw %}
-          <hr>
-          <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
-          <p class="card-text">Проверка {{ router_main_gw.ip_addr }}, шлюз основного провайдера</p>
-          {% if router_main_gw.icmp_percent %}
-          <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_percent }}</p>
+            <p class="card-text">Проверка {{ core_isp_main.interface }}, описание {{ core_isp_main.description }}</p>
+            <p class="card-text">Согласованная скорость {{ core_isp_main.speed }}</p>
+            <p class="card-text">Состояние интерфейса {{ core_isp_main.intf_status }}</p>
+            <p class="card-text">Состояние протокола {{ core_isp_main.prot_status }}</p>
+            <p class="card-text">Количество входящих ошибок {{ core_isp_main.input_errors }}</p>
+            <p class="card-text">Количество исходящих ошибок {{ core_isp_main.output_errors }}</p>
+            {% else %}
+            <p class="card-text">ТЕСТ 1. Анализ состояния интерфейса на ядре сети НЕ ВЫПОЛНЕН</p>
+            <p class="card-text">ПОПРОБУЙТЕ ПОВТОРИТЬ ПОПЫТКУ ЕЩЕ РАЗ</p>
+            {% endif %}
           {% endif %}
-          {% if router_main_gw.icmp_pcent %}
-          <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_pcent }}</p>
+          {% if core_isp_backup %}
+            <div class="card text-bg-secondary mb-3 recommendations">
+              <div class="card-header">Описание результата тестирования</div>
+              <div class="card-body">
+                {% for keys, descripts in recommendations.errors_intf_rcm.items %}
+                <p class="card-text">{{ descripts }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            <p class="card-text">Проверка {{ core_isp_backup.interface }}, описание {{ core_isp_backup.description }}</p>
+            <p class="card-text">Согласованная скорость {{ core_isp_backup.speed }}</p>
+            <p class="card-text">Состояние интерфейса {{ core_isp_backup.intf_status }}</p>
+            <p class="card-text">Состояние протокола {{ core_isp_backup.prot_status }}</p>
+            <p class="card-text">Количество входящих ошибок {{ core_isp_backup.input_errors }}</p>
+            <p class="card-text">Количество исходящих ошибок {{ core_isp_backup.output_errors }}</p>
           {% endif %}
-          {% if router_main_gw.icmp_packets %}
-          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_packets }}</p>
-          {% endif %}
-          {% if router_main_gw.icmp_pkts %}
-          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_pkts }}</p>
-          {% endif %}
-          {% if router_main_gw.delay %}
-          <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_main_gw.delay }}</p>
-          {% endif %}
-          {% for trace in router_main_gw.trace_result %}
-          <p class="card-text">{{ trace }}</p>
-          {% endfor %}
-        {% endif %}
-        {% if router_backup_gw %}
-          <hr>
-          <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
-          <p class="card-text">Проверка {{ router_backup_gw.ip_addr }}, шлюз резервного провайдера</p>
-          {% if router_backup_gw.icmp_percent %}
-          <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_percent }}</p>
-          {% endif %}
-          {% if router_backup_gw.icmp_pcent %}
-          <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_pcent }}</p>
-          {% endif %}
-          {% if router_backup_gw.icmp_packets %}
-          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_packets }}</p>
-          {% endif %}
-          {% if router_backup_gw.icmp_pkts %}
-          <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_pkts }}</p>
-          {% endif %}
-          {% if router_backup_gw.delay %}
-          <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_backup_gw.delay }}</p>
-          {% endif %}
-          {% for trace in router_backup_gw.trace_result %}
-          <p class="card-text">{{ trace }}</p>
-          {% endfor %}
-        {% endif %}
-        {% if border_trace_main_gw %}
-          <hr>
-          <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
-          {% for key, val in border_trace_main_gw.items %}
-          <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
-          <p class="card-text">Трассировка с оборудования {{ key }}</p>
-            {% for trace in val.trace %}
-              <p class="card-text">{{ trace }}</p>
+          {% if router_main_gw %}
+            <hr>
+            <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
+            <div class="card text-bg-secondary mb-3 recommendations">
+              <div class="card-header">Описание результата тестирования ICMP</div>
+              <div class="card-body">
+                {% for keys, descripts in recommendations.ping_rcm.items %}
+                <p class="card-text">{{ descripts }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="card text-bg-secondary mb-3 recommendations">
+              <div class="card-header">Описание результата тестирования ICMP DELAY</div>
+              <div class="card-body">
+                {% for keys, descripts in recommendations.delay_rcm.items %}
+                <p class="card-text">{{ descripts }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            <p class="card-text">Проверка {{ router_main_gw.ip_addr }}, шлюз основного провайдера</p>
+            {% if router_main_gw.icmp_percent %}
+            <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_percent }}</p>
+            {% endif %}
+            {% if router_main_gw.icmp_pcent %}
+            <p class="card-text">Процент успешного icmp запроса {{ router_main_gw.icmp_pcent }}</p>
+            {% endif %}
+            {% if router_main_gw.icmp_packets %}
+            <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_packets }}</p>
+            {% endif %}
+            {% if router_main_gw.icmp_pkts %}
+            <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_main_gw.icmp_pkts }}</p>
+            {% endif %}
+            {% if router_main_gw.delay %}
+            <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_main_gw.delay }}</p>
+            {% endif %}
+            {% for trace in router_main_gw.trace_result %}
+            <p class="card-text">{{ trace }}</p>
             {% endfor %}
-          {% endfor %}
-        {% endif %}
-        {% if border_trace_backup_gw %}
-          <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
-          {% for key, val in border_trace_backup_gw.items %}
-          <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
-          <p class="card-text">Трассировка с оборудования {{ key }}</p>
-            {% for trace in val.trace %}
-              <p class="card-text">{{ trace }}</p>
+          {% endif %}
+          {% if router_backup_gw %}
+            <hr>
+            <p class="card-text">ТЕСТ 2. Анализ состояния шлюза, {{ lab_choice }}</p>
+            <div class="card text-bg-secondary mb-3 recommendations">
+              <div class="card-header">Описание результата тестирования ICMP</div>
+              <div class="card-body">
+                {% for keys, descripts in recommendations.ping_rcm.items %}
+                <p class="card-text">{{ descripts }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="card text-bg-secondary mb-3 recommendations">
+              <div class="card-header">Описание результата тестирования ICMP DELAY</div>
+              <div class="card-body">
+                {% for keys, descripts in recommendations.delay_rcm.items %}
+                <p class="card-text">{{ descripts }}</p>
+                {% endfor %}
+              </div>
+            </div>
+            <p class="card-text">Проверка {{ router_backup_gw.ip_addr }}, шлюз резервного провайдера</p>
+            {% if router_backup_gw.icmp_percent %}
+            <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_percent }}</p>
+            {% endif %}
+            {% if router_backup_gw.icmp_pcent %}
+            <p class="card-text">Процент успешного icmp запроса {{ router_backup_gw.icmp_pcent }}</p>
+            {% endif %}
+            {% if router_backup_gw.icmp_packets %}
+            <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_packets }}</p>
+            {% endif %}
+            {% if router_backup_gw.icmp_pkts %}
+            <p class="card-text">Соотношение отправленных/принятых icmp запросов {{ router_backup_gw.icmp_pkts }}</p>
+            {% endif %}
+            {% if router_backup_gw.delay %}
+            <p class="card-text">Задержка минимальная/средняя/максимальная {{ router_backup_gw.delay }}</p>
+            {% endif %}
+            {% for trace in router_backup_gw.trace_result %}
+            <p class="card-text">{{ trace }}</p>
             {% endfor %}
-          {% endfor %}
-        {% endif %}
+          {% endif %}
+          {% if border_trace_main_gw %}
+            <hr>
+            <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
+            {% for key, val in border_trace_main_gw.items %}
+            <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
+            <p class="card-text">Трассировка с оборудования {{ key }}</p>
+              {% for trace in val.trace %}
+                <p class="card-text">{{ trace }}</p>
+              {% endfor %}
+            {% endfor %}
+          {% endif %}
+          {% if border_trace_backup_gw %}
+            <p class="card-text">ТЕСТ 3. Трассировка с ЦОД до {{ lab_choice }}</p>
+            {% for key, val in border_trace_backup_gw.items %}
+            <p class="card-text">Последнее обновление маршрута на {{ key }} {{ val.date_update }}</p>
+            <p class="card-text">Трассировка с оборудования {{ key }}</p>
+              {% for trace in val.trace %}
+                <p class="card-text">{{ trace }}</p>
+              {% endfor %}
+            {% endfor %}
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</div>
-</section>
+  </section>
 {% endblock %}

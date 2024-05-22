@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block title %}Неактивные интерфейсы{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'main/bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/fontawesome.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/brands.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'main/fontawesome/css/solid.css' %}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="{% static 'tools/css/inactive_intf.css' %}">
+{% endblock %}
+
+{% block content %}
+  <section class="inactive_intf">
+    <div style="background-image: url({% static 'tools/img/banner_test_labs.jpeg' %});
+      background-size: cover;
+      max-weight: 25%;
+      max-height: 25%">
+    <div class="place-choose">
+      <h4>Выберите площадку для проверки</h4>
+        <form action="{% url 'inactive_intf' %}" method="post">
+          {% csrf_token %}
+          <select class="form-select w-50" aria-label="Default select example" name="places">
+            {% for place in places %}
+              <option {% if place_choice == place.name %} selected {% endif %} value="{{ place.name }}">{{ place.name }}</option>
+            {% endfor %}
+          </select>
+          <div class="week-choose">
+          <h4>Выберите период неактивности в неделях</h4>
+          <div class="col-md-3 mb-3">
+            <label for="validationServer04"></label>
+            <select class="custom-select is-invalid" id="validationServer04" aria-describedby="validationServer04Feedback" name="period" required>
+              <option selected disabled value="">Choose...</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+              <option>9</option>
+              <option>10</option>
+            </select>
+            <div id="validationServer04Feedback" class="invalid-feedback">
+              Пожалуйста выберить период
+            </div>
+          </div>
+          <input type="submit" class="btn btn-secondary" value="Выбрать" />
+          </div>
+        </form>
+      <div class="test-result">
+      <div class="card">
+        <div class="card-header">
+          Результаты проверки неактивных интерфейсов
+        </div>
+        <div class="card-body">
+          {% if not place_choice %}
+            <div class="spinner-grow" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          {% endif %}
+          {% if user_message %}
+            <p class="card-text">{{ user_message }}</p>
+          {% endif %}
+          {% for key, values in switch_intf_dict.items %}
+            <p class="card-text">Коммутатор {{ key }}</p>
+            {% for k, val in values.items %}
+              <p class="card-text">Интерфейс {{ k }}</p>
+              <p class="card-text">Cостояние: {{ val }}</p>
+            {% endfor %}
+            <p class="card-text">----------------------</p>
+          {% endfor %}
+        </div>
+      </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
